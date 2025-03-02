@@ -128,11 +128,22 @@ export default function olovaPlugin() {
         `;
       }
 
-      // Modify script content to remove props-related code
+      // Modify script content to remove ALL setProps-related code
       const modifiedScriptContent = scriptContent
         .replace(/import\s+(\w+)\s+from\s+['"](.+?)\.olova['"]/g, "")
-        .replace(/let\s+props\s*=\s*setProps\([^)]*\);?/g, "")
-        .replace(/const\s+props\s*=\s*setProps\([^)]*\);?/g, "");
+        // Remove any import of setProps
+        .replace(
+          /import\s+{?\s*setProps\s*}?\s*from\s+['"][^'"]+['"]\s*;?\s*/g,
+          ""
+        )
+        // Remove variable declarations using setProps
+        .replace(/(?:let|const|var)\s+props\s*=\s*setProps\([^)]*\);?/g, "")
+        // Remove direct setProps function calls
+        .replace(/setProps\([^)]*\);?/g, "")
+        // Remove any variable assignments using setProps
+        .replace(/\w+\s*=\s*setProps\([^)]*\);?/g, "")
+        // Remove function declarations of setProps
+        .replace(/function\s+setProps\s*\([^)]*\)\s*{[^}]*}/g, "");
 
       // Don't process the template here, just escape any backticks
       const escapedHtmlContent = htmlContent.replace(/`/g, "\\`");
@@ -318,20 +329,4 @@ function transformScopedCss(css, scopeId) {
   }
 
   return processedCss;
-}
-
-// Helper function to extract props from attributes (kept for future reference)
-function extractProps(attrsString) {
-  if (!attrsString) return {};
-
-  const props = {};
-  const attrRegex = /(\w+)=["']([^"']*)["']/g;
-  let match;
-
-  while ((match = attrRegex.exec(attrsString)) !== null) {
-    const [_, name, value] = match;
-    props[name] = value;
-  }
-
-  return props;
 }
