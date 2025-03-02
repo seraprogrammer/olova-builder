@@ -1,0 +1,23 @@
+<script>
+  import Counter from "./counter.olova";
+  import Hello from "./Hello.olova";
+
+  console.log("App component loaded");
+</script>
+
+<div class="app">
+  <h1>My Olova App</h1>
+  <Counter />
+  <Hello/>
+</div>
+
+<style scoped>
+  .app {
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+
+  h1 {
+    color: red;
+  }
+</style>

@@ -1,0 +1,22 @@
+<script>
+  let count = 0;
+  const counter = querySelector("#counter");
+  const button = querySelector("button");
+
+  button.addEventListener("click", () => {
+    count++;
+    counter.textContent = count;
+  });
+</script>
+
+<div>
+  <h2 id="counter">0</h2>
+  <button>Increment</button>
+</div>
+
+<style>
+  #counter {
+    font-size: 24px;
+    color: blue;
+  }
+</style>
